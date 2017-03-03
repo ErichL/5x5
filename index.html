@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>5x5</title>
+
+    <!-- Bootstrap -->
+    <link href="stylesheets/styles.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">5x5</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="jumbotron">
+      <div class="container">
+        <div id="search_box">
+          <input type="text" id="album_search" class="form-control" placeholder="Album Name">
+          <ul id="search_results">
+          </ul>
+        </div>
+        <div id="tier_list"></div>
+      </div>
+      <p><a onclick='save_as_img()' class="btn btn-primary btn-lg" href="#" role="button">Save</a></p>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+       </div>
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="javascripts/bootstrap.min.js"></script>
+    <script>
+      $(function() {
+        list_data = JSON.parse(localStorage.getItem("list"));
+        var list_arr = [];
+        if (list_data) {
+          for (i = 0; i < 50; i++) {
+            list_arr.push("<li data-artist='"+ list_data[i].artist +"' data-album='" + list_data[i].album + "' data-src='" + list_data[i].src + "' class='grid_item ui-state-default'><img src='" +list_data[i].src + "' alt='"+ (i+1) +"' class=''></li>");
+          }
+        } else {
+          for (i = 0; i < 50; i++) {
+            list_arr.push("<li data-artist='' data-album='' data-src='' class='grid_item ui-state-default'><img src='' alt='"+ (i+1) +"' class=''></li>");
+          }
+        }
+        var $outer = "<div class='top_grid row'><div class='header'>Top 5</div><ul id='top1' class='top_list'>";
+        for (i = 0; i < 5; i++) {
+          $outer += list_arr[i];
+        }
+        $outer += "</ul></div>";
+        $("#tier_list").append($outer);
+
+        $outer = "<div class='top_grid row'><div class='header'>Top 25</div><ul id='top2' class='top_list'>";
+        for (i; i < 25; i++) {
+          $outer += list_arr[i];
+        }
+        $outer += "</ul></div>";
+        $("#tier_list").append($outer);
+
+        $outer = "<div class='top_grid row'><div class='header'>Top 50</div><ul id='top3' class='top_list'>";
+        for (i; i < 50; i++) {
+          $outer += list_arr[i];
+        }
+        $outer += "</ul></div>";
+        $("#tier_list").append($outer);
+      });
+    </script>
+    <script>
+      $(function() {
+        $("#top1, #top2, #top3").sortable({
+          connectWith: ".top_list",
+          placeholder: "sortable-placeholder"
+        }).disableSelection();
+        $("#top1").on("sortreceive", function(event, ui){
+          $("#top1").children().last().prependTo("#top2");
+          $("#top1, #top2, #top3").sortable('refresh');
+        });
+        $("#top2").on("sortreceive", function(event, ui){
+          if (toString(ui.sender).indexOf("#top3") >= 0) {
+            $("#top2").children().last().prependTo("#top3");
+          } else {
+            $("#top2").children().first().appendTo("#top1");
+          }
+          $("#top1, #top2, #top3").sortable('refresh');
+        });
+         $("#top3").on("sortreceive", function(event, ui){
+          if (toString(ui.sender).indexOf("#top2") >= 0) {
+            $("#top3").children().first().appendTo("#top2");
+          } else {
+            $("#top2").children().first().appendTo("#top1");
+          }
+          $("#top1, #top2, #top3").sortable('refresh');
+        });
+        $("#top1, #top2, #top3").on("sortupdate", function( event, ui ) {
+          save_list();
+        });
+      });
+
+      function save_list() {
+        var arr = [];
+        for (i=0; i < $(".top_list li").length; i++) {
+          item = $(".top_list li")[i];
+          i_artist = $(item).attr("data-artist");
+          i_album = $(item).attr("data-album");
+          i_src = $(item).attr("data-src");
+          var data = {artist:i_artist, album: i_album, src: i_src};
+          arr.push(data);
+        }
+        if(typeof(Storage)!=="undefined") {
+          localStorage.setItem("list", JSON.stringify(arr));
+        }
+      };
+
+      function save_as_img() {
+      }
+
+      var target = "";
+      $(function() {
+        $(".grid_item").on('click', function(e) {
+          $(target).parent().removeClass("active");
+          target = e.target;
+          $(target).parent().addClass("active"); 
+          if ( $('#search_results').children().length > 0 ) {
+            $("#search_results").slideDown('medium');
+          }
+          e.stopPropagation();
+        });
+      });
+
+      var delay = (function(){
+        var timer = 0;
+        return function(callback, ms){
+          clearTimeout (timer);
+          timer = setTimeout(callback, ms);
+        };
+      })();
+      $(function() {    
+        $('#album_search').on('keyup', function() {
+          delay(function(){
+            $("#search_results").slideDown('medium');
+            var search_term = encodeURIComponent($("#album_search").val());
+            $.ajax({
+              url: 'http://ws.audioscrobbler.com/2.0/?method=album.search&album=' + search_term + '&api_key=56f52ac478e6f5b89c7daf154da98003&format=json&limit=10',
+              success: function(data) {
+                $("#search_results").empty();
+                var results = data.results.albummatches.album;
+                for (album in results) {
+                  $("<li data-artist='"+ results[album].artist + "' data-album='" + results[album].name + "' class='result'><a href='#' onclick='set_item(this)'><img src='"+ results[album].image[2]['#text'] +"'><div class='album_info'><p class='album_artist'>" + results[album].artist +"</p> <p class='album_name'>" + results[album].name + "</p></div></a></li>").appendTo("#search_results");
+                }
+              }
+            })
+          }, 500 );
+        });
+      });
+
+      function set_item(e) {
+        var source = $(e).find('img').attr('src');
+        $(target).attr('src', source);
+        $(target).parent().attr("data-artist", $(e).parent().attr("data-artist"));
+        $(target).parent().attr("data-album", $(e).parent().attr("data-album"));
+        $(target).parent().attr("data-src", source);
+        $(target).parent().removeClass("active");
+        target = "";
+        save_list();
+      };
+
+      $('#album_search').click(function(e) { 
+        if ( $('#search_results').children().length > 0 ) {
+          $("#search_results").slideDown('medium');
+        }
+         e.stopPropagation();
+      });
+      $(document).click(function() {
+          $("#search_results").slideUp('medium');
+      });
+    </script>
+  </body>
+</html>

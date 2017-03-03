@@ -1,0 +1,101 @@
+.jumbotron {
+	background: #424242;
+	.container {
+		padding: 10px 15px;
+	}
+}
+
+.top_grid {
+	width: 100%;
+	color: #FF7270;
+	padding: 0;
+	margin: 15px 0 0 0;
+	background-color: #fff;
+	.header {
+		text-align: center;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		border-bottom: 1px solid #FF7373;
+	}
+	#top1 {
+		li {
+			width: 150px;
+			height: 150px;
+			img {
+				line-height: 150px;
+			}
+		}
+	}
+	.top_list {
+		margin: 10px 0 0 10px;
+    	padding: 0;
+		list-style-type: none;
+		li {
+			&.active {
+				background: black;
+			}
+			margin: 0 5px 10px 0;
+	    	padding: 0;
+			display: inline-block;
+			width: 110px;
+			height: 110px;
+			img {
+				width: 100%;
+    			height: 100%;
+    			font-size: 30px;
+			    line-height: 110px;
+			    text-align: center;
+			}
+		}
+	}
+	.sortable-placeholder {
+		vertical-align: bottom;
+		border: thin solid black;
+		display: inline-block;
+		width: 100px;
+		height: 100px;
+	}
+}
+
+#search_box {
+	#album_search, #search_results {
+		width: 50%;
+		margin: auto;
+	}
+	#search_results {
+		display: none;
+		border: 1px solid #ccc;
+	    border-radius: 4px;
+	    margin-top: 1px;
+	    background: white;
+		padding:0;
+		.result {
+			padding: 6px;
+			border-bottom: thin solid gray;
+			a {
+				color: black;
+			}
+			img, .album_info {
+				display: inline-block;
+				height: 50px;
+				vertical-align: top;
+			}
+			.album_info {
+				margin-left: 6px;
+				.album_artist, .album_name {
+					margin: 0;
+					padding: 0;
+				}
+				.album_artist {
+					font-size: 20px;
+				}
+				.album_name {
+					font-size: 16px;
+				}
+			}
+		}
+		:last-child {
+			border: none;
+		}
+	}
+}
